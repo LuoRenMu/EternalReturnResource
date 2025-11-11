@@ -21,6 +21,7 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+        cache: 'none'
     - name: Run resource downloader JAR
       run: |
         java -jar ./EternalReturnDownloadResources.jar
