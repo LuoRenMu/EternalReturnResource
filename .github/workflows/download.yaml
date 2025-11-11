@@ -10,14 +10,12 @@ on:
 jobs:
   download-resources:
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
@@ -25,15 +23,12 @@ jobs:
         distribution: 'temurin'
     - name: Run resource downloader JAR
       run: |
-        echo "🚀 Starting EternalReturn resource download..."
-        echo "JAR Path: ${{ steps.find_jar.outputs.main_jar }}"
-        java -jar "${{ steps.find_jar.outputs.main_jar }}" || echo "⚠️ JAR execution completed"
+        java -jar ./EternalReturnDownloadResources.jar
         echo "✅ Resource download process finished"
     - name: Calculate resource stats and stage files
       id: stats_and_stage
       run: |
         echo "🔄 Staging files and calculating stats..."
-        
         git add -A
         
   
@@ -47,7 +42,6 @@ jobs:
           TOTAL_COUNT=0
         fi
         
-        # 将数据写入 $GITHUB_ENV 供后续步骤使用
         echo "PNG_COUNT=$PNG_COUNT" >> $GITHUB_ENV
         echo "JSON_COUNT=$JSON_COUNT" >> $GITHUB_ENV
         echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
