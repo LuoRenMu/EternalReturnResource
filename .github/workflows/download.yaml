@@ -3,7 +3,7 @@ name: EternalReturn Resource Downloader
 on:
   workflow_dispatch:  # 手动触发
   schedule:
-    - cron: '0 16 * * *'  # 每天UTC时间16:00运行（对应北京时间00:00）
+    - cron: '0 8 * * *'  # 每天UTC时间16:00运行（对应北京时间00:00）
   push:
     branches: [ main, master ]
 
