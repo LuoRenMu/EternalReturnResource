@@ -67,12 +67,12 @@ jobs:
         commit_message: |
           Auto-update: EternalReturn Resources ${{ env.COMMIT_DATE }}
 
-          📦 Resource Summary:
+          Resource Summary:
           • Total Files: ${{ env.TOTAL_COUNT }}
           • PNG Images: ${{ env.PNG_COUNT }}
           • JSON Data: ${{ env.JSON_COUNT }}
 
-          🎮 Content Types:
+          Content Types:
           - Character images & profiles
           - Weapon mastery icons  
           - Trait skills & groups
@@ -88,16 +88,36 @@ jobs:
         commit_user_name: github-actions[bot]
         commit_user_email: github-actions[bot]@users.noreply.github.com
       
-    - name: Workflow summary
-      run: |
-        echo "🎉 EternalReturn Resource Downloader Completed!"
-        echo ""
 
-        if [ "${{ steps.auto_commit.outputs.changes_detected }}" == "true" ]; then
-          echo "✅ 新资源已下载、暂存并提交到仓库。"
-          echo "📁 请检查 'resources' 目录以查看更新文件。"
-        else
-          echo "ℹ️ 未检测到新资源下载——所有文件都是最新的。"
-        fi
-        echo ""
+    - name: Compress resources
+      if: steps.auto_commit.outputs.changes_detected == 'true' # 只有当有新文件提交时才压缩
+      run: |
+        echo "📦 Compressing resources directory..."
+        zip -r eternal-return-resources.zip resources/
+        echo "✅ Compression complete."
+
+    - name: Create GitHub Release
+      if: steps.auto_commit.outputs.changes_detected == 'true'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: resources-${{ env.COMMIT_DATE }} 
+        name: 📦 Eternal Return Resources ${{ env.COMMIT_DATE }}
+        files: eternal-return-resources.zip
+        body: |
+          ## 🎮 Resource Auto-Update (${{ env.COMMIT_DATE }})
+          
+          资源包已自动更新。
+          
+          ### 📊 统计信息
+          - **Total Files:** ${{ env.TOTAL_COUNT }}
+          - **PNG Images:** ${{ env.PNG_COUNT }}
+          - **JSON Files:** ${{ env.JSON_COUNT }}
+          
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Workflow summary
+      if: always() 
+      run: |
+        echo "completed!"
         echo "🔗 Workflow URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
