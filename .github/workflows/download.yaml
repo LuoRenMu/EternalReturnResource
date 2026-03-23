@@ -3,7 +3,7 @@ name: EternalReturn Resource Downloader
 on:
   workflow_dispatch:  # 手动触发
   schedule:
-    - cron: '0 8 * * *'  # 每天UTC时间16:00运行（对应北京时间00:00）
+    - cron: '0 8 * * *' 
   push:
     branches: [ main, master ]
 
@@ -66,25 +66,6 @@ jobs:
     
         commit_message: |
           Auto-update: EternalReturn Resources ${{ env.COMMIT_DATE }}
-
-          Resource Summary:
-          • Total Files: ${{ env.TOTAL_COUNT }}
-          • PNG Images: ${{ env.PNG_COUNT }}
-          • JSON Data: ${{ env.JSON_COUNT }}
-
-          Content Types:
-          - Character images & profiles
-          - Weapon mastery icons  
-          - Trait skills & groups
-          - Item images
-          - Tactical skills
-          - Tier rankings
-
-          🔄 Source: EternalReturn CDN (cdn.dak.gg)
-          ⚡ Automated by: GitHub Actions CI/CD
-          📅 Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-          🔧 Workflow: ${{ github.workflow }}
-          🆔 Run ID: ${{ github.run_id }}
         commit_user_name: github-actions[bot]
         commit_user_email: github-actions[bot]@users.noreply.github.com
       
@@ -104,11 +85,8 @@ jobs:
         name: 📦 Eternal Return Resources ${{ env.COMMIT_DATE }}
         files: eternal-return-resources.zip
         body: |
-          ## 🎮 Resource Auto-Update (${{ env.COMMIT_DATE }})
+          Resource Auto-Update (${{ env.COMMIT_DATE }})
           
-          资源包已自动更新。
-          
-          ### 📊 统计信息
           - **Total Files:** ${{ env.TOTAL_COUNT }}
           - **PNG Images:** ${{ env.PNG_COUNT }}
           - **JSON Files:** ${{ env.JSON_COUNT }}
